@@ -18,16 +18,22 @@
  	}
  }
 
+ bool Field::inBounds(int x, int y)
+ {
+ 	if(x < 0 || x >= FIELD_DIMENSION || y < 0 || y >= FIELD_DIMENSION)
+ 	{
+ 		return false;
+ 	}
+ 	else
+ 		return true;
+ }
+
  /**
   * Places a mine at the x,y coordinate in the field
  **/
  void Field::placeMine(int x, int y)
  {
- 	if(x < 0 || x >= FIELD_DIMENSION || y < 0 || y >= FIELD_DIMENSION)
- 	{
- 		throw "Out of bounds";
- 	}
- 	else
+ 	if( inBounds(x,y) )
  		_map[x][y] = MINE_HIDDEN;
  }
 
@@ -36,12 +42,10 @@
 **/
 FieldType Field::get(int x, int y)
 {
-	if(x < 0 || x >= FIELD_DIMENSION || y < 0 || y >= FIELD_DIMENSION)
- 	{
- 		throw "Out of bounds";
- 	}
- 	else
+	if( inBounds(x,y) )
  		return _map[x][y];
+ 	else
+ 		throw "Out of bounds";
 }
 
 /**
@@ -50,11 +54,7 @@ FieldType Field::get(int x, int y)
 **/
  bool Field::isSafe(int x, int y)
  {
- 	if(x < 0 || x >= FIELD_DIMENSION || y < 0 || y >= FIELD_DIMENSION)
- 	{
- 		throw "Out of bounds";
- 	}
- 	return _map[x][y] != MINE_HIDDEN && _map[x][y] != MINE_SHOWN;
+ 	return inBounds(x,y) && (_map[x][y] != MINE_HIDDEN && _map[x][y] != MINE_SHOWN);
  }
 
 /**
@@ -64,8 +64,9 @@ FieldType Field::get(int x, int y)
 **/
 void Field::revealAdjacent(int x, int y)
 {
-	if( x < 0 || x >= FIELD_DIMENSION || y < 0 || y >= FIELD_DIMENSION 
-		|| _map[x][y] == MINE_HIDDEN || _map[x][y] == MINE_SHOWN )
+	bool inside;
+	inside = inBounds(x,y);
+	if( !inside || _map[x][y] == MINE_HIDDEN || _map[x][y] == MINE_SHOWN )
 	{
 		return;
 	}
