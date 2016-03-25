@@ -58,7 +58,7 @@ FieldType Field::get(int x, int y)
  }
 
 /**
- * Changes the location from EMPTY_HIDDEN to EMPTY_SHOWN for the 
+ * Changes the location from EMPTY_HIDDEN to EMPTY_SHOWN for the
  * location and any valid locations adjacent (immediately above,
  * below, left, or right as printed) to the provided (x,y) location
 **/
@@ -78,4 +78,12 @@ void Field::revealAdjacent(int x, int y)
 		revealAdjacent(x+1,y);
 		revealAdjacent(x,y+1);
 	}
+}
+
+void Field::setMineShown(int x, int y){
+  bool inside;
+	inside = inBounds(x,y);
+	if(inside){
+    _map[x][y] = MINE_SHOWN;
+  }
 }
